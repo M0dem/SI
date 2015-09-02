@@ -64,7 +64,11 @@ def tokenize(code):
 
         # handle organizers
         elif code[i] in organizers["start"]:
-            handleOrganizers(code, i)
+            # handleOrganizers(code, i)
+						subOrganizers = 0
+						while i < len(code):
+								if code[i] in organizers["end"] and subOrganizers == 0:
+										break
 
         # handle keywords
         else:
