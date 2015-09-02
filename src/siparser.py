@@ -1,3 +1,4 @@
+#!/usr/bin/python
 
 class Token:
     def __init__(self, name):
@@ -64,11 +65,27 @@ def tokenize(code):
 
         # handle organizers
         elif code[i] in organizers["start"]:
-            # handleOrganizers(code, i)
+						# handleOrganizers(code, i)
+						
 						subOrganizers = 0
+						subCode = ""
+						i += 1
 						while i < len(code):
-								if code[i] in organizers["end"] and subOrganizers == 0:
-										break
+								if code[i] in organizers["end"]:
+										if subOrganizers == 0:
+												break
+
+										elif subOrganizers > 0:
+												subOrganizers -= 1
+
+								elif code[i] in organizers["start"]:
+										subOrganizers += 1
+
+								subCode += code[i]
+								i += 1
+
+						codeL.append(parse(subCode))
+						print(subCode)
 
         # handle keywords
         else:
