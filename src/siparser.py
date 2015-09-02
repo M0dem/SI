@@ -24,6 +24,24 @@ parseTokens = [
     "/"
 ]
 
+# organizers are basically lists that contain information in sequence ( [a, b, c] or (x, y, z) )
+# an organizer could also contain arguments to functions
+organizers = {
+    "start": {
+        "(",
+        "["
+    },
+    "end": {
+        ")",
+        "]"
+    }
+}
+
+organizerEnd = {
+    "(": ")",
+    "[": "]"
+}
+
 def parse(code):
     code = tokenize(code)
     return code
@@ -44,9 +62,9 @@ def tokenize(code):
 
             codeL.append(String("".join(l)))
 
-        # handle "organizers"
-        elif code[i] in parseTokens:
-            codeL.append(Token(code[i]))
+        # handle organizers
+        elif code[i] in organizers["start"]:
+            handleOrganizers(code, i)
 
         # handle keywords
         else:
@@ -62,6 +80,29 @@ def tokenize(code):
         i += 1
 
     return codeL
+
+# extracts list from organizer
+# is recursive for sub-organizers
+def handleOrganizers(code, i):
+    l = []
+    start = code[i]
+    i += 1
+    while i < len(code):
+        try:
+            if code[i] in organizers["start"]:
+                tmpL, i = handleOrganizers(code, i)
+                l.append(tmpL)
+
+            else:
+                l.append(code[i])
+
+        except:
+            pass
+
+
+        i += 1
+        
+    return l, i
 
 '''def tokenize(code):
     for token in parseTokens:
