@@ -1,5 +1,8 @@
 #!/usr/bin/python
 
+from __future__ import print_function
+
+
 class Token:
     def __init__(self, name):
         self.name = name
@@ -22,20 +25,21 @@ parseTokens = [
     "+",
     "-",
     "*",
-    "/"
+    "/",
+    ","
 ]
 
 # organizers are basically lists that contain information in sequence ( [a, b, c] or (x, y, z) )
 # an organizer could also contain arguments to functions
 organizers = {
-    "start": {
+    "start": [
         "(",
         "["
-    },
-    "end": {
+    ],
+    "end": [
         ")",
         "]"
-    }
+    ]
 }
 
 organizerEnd = {
@@ -62,43 +66,57 @@ def tokenize(code):
                 i += 1
 
             codeL.append(String("".join(l)))
+            
+            print("string!")
+            print("  " + "".join(l))
+            print("\n")
 
         # handle organizers
         elif code[i] in organizers["start"]:
-						# handleOrganizers(code, i)
+            # handleOrganizers(code, i)
 						
-						subOrganizers = 0
-						subCode = ""
-						i += 1
-						while i < len(code):
-								if code[i] in organizers["end"]:
-										if subOrganizers == 0:
-												break
+            subOrganizers = 0
+	    subCode = ""
+            i += 1
+	    while i < len(code):
+                if code[i] in organizers["end"]:
+                    if subOrganizers == 0:
+                        break
 
-										elif subOrganizers > 0:
-												subOrganizers -= 1
+                    elif subOrganizers > 0:
+                        subOrganizers -= 1
 
-								elif code[i] in organizers["start"]:
-										subOrganizers += 1
+                    elif code[i] in organizers["start"]:
+                        subOrganizers += 1
 
-								subCode += code[i]
-								i += 1
+                subCode += code[i]
+                i += 1
 
-						codeL.append(parse(subCode))
-						print(subCode)
-
+            subCode = parse(subCode)
+	    codeL.append(subCode)
+	    
+	    print("organizer!")
+	    print("  ", end = "")
+	    print(subCode)
+	    print("\n")
+	    
         # handle keywords
-        else:
+        elif code[i] != " " and (code[i] != "'" and code[i] != '"') and code[i] not in parseTokens:
             l = []
-            while i < len(code) and (code[i] != "'" or code[i] != '"') and code[i] not in parseTokens:
+            while i < len(code) and (code[i] != "'" and code[i] != '"') and code[i] != " " and code[i] not in parseTokens:
                 l.append(code[i])
                 i += 1
 
             i -= 1
 
             codeL.append(Keyword("".join(l)))
+            
+            print("keyword!")
+            print("  " + "".join(l))
+            print("\n")
 
         i += 1
+        
 
     return codeL
 
