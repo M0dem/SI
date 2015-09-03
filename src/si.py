@@ -1,12 +1,13 @@
 #!/usr/bin/python
 
-import siparser
+import si_interpreter as interpreter
+import si_parser as parser
 
 if __name__ == "__main__":
     # Just a temporary REPL thingy
     try:
         while True:
-            print(siparser.parse(raw_input("> ")))
+            print(parser.parse(raw_input("> ")))
 
     except IndexError:
         pass
